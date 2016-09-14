@@ -17,12 +17,10 @@ or at initialization of client.
 ```js
 var nexiot = require('nexiot');
 var settings = {
-    {
         API_URL: 'amqp://guest:guest@localhost/',
         exchange: 'amq.topic',
         routingKey: '#',
         rpcPrefix: 'miimetiq.writer.rpc.'
-    }
 }
 var client = nexiot.Nexiot(settings);
 ```
