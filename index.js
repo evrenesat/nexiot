@@ -12,7 +12,7 @@ function opt(options, name, dflt) {
 }
 
 var Settings = {
-    API_URL: opt(process.env, 'API_URL', 'amqp://guest:guest@localhost/'),
+    apiURL: opt(process.env, 'API_URL', 'amqp://guest:guest@localhost/'),
     exchange: opt(process.env, 'EXCHANGE', 'amq.topic'),
     routingKey: opt(process.env, 'ROUTING_KEY', '#'),
     rpcPrefix: opt(process.env, 'RPC_PREFIX', 'miimetiq.writer.rpc.')
@@ -25,7 +25,7 @@ var Nexiot = function (parameters) {
     function connect() {
         var self = this;
         // console.log("URL", self.settings.API_URL);
-        return amqplib.connect(self.settings.API_URL).then(function (conn) {
+        return amqplib.connect(self.settings.apiURL).then(function (conn) {
             self.connection = conn;
             return conn.createChannel();
         }).then(function (ch) {
