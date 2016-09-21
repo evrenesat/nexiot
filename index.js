@@ -84,8 +84,8 @@ var Nexiot = function (parameters) {
             self.channel.assertQueue(options.queueName, {autoDelete: true}),
             self.channel.assertExchange(options.exchange, 'topic'),
             self.channel.bindQueue(options.queueName, options.exchange, options.routingKey)
-        ]).then(function (rply) {
-            // console.log("Subscribe pre-consume \nbindqueue: ", rply[0].queue,
+        ]).then(function () {
+            // console.log("Subscribe pre-consume \nbindqueue: ", arguments[0][0].queue,
             //     "\nroutingKey: ", options.routingKey,
             //     "\nCallback: \n", callback);
             self.channel.consume(options.queueName, callback, {noAck: true});
@@ -101,14 +101,14 @@ var Nexiot = function (parameters) {
      * @param {string} target - routingKey of RPC server
      * @param {string} command - RPC command
      * @param {function} callback - method to be called with result.
-     *                   callback argument of publish method
-     *                   @see {@link publish}
+     *                   callback argument of subscribe method
+     *                   @see {@link subscribe}
      * @param {*} payload - optional payload of the command
      * @param {string} [taskID] task ID.
      */
     function rpc(target, command, callback, payload, taskID) {
         var self = this;
-        var taskID = taskID || Math.random().toString().substring(2);
+        taskID = taskID || Math.random().toString().substring(2);
         var content = {'command': command, 'payload': payload};
         var rpcPattern = self.settings.rpcPrefix + target;
         self.subscribe({routingKey: taskID, callback: callback}).then(function () {
@@ -134,7 +134,7 @@ var Nexiot = function (parameters) {
         publish: publish,
         subscribe: subscribe,
         rpc: rpc,
-        get_system_report: get_system_report,
+        get_system_report: get_system_report
 
     };
 
