@@ -15,13 +15,19 @@ var Settings = {
     apiURL: opt(process.env, 'API_URL', 'amqp://guest:guest@localhost/'),
     exchange: opt(process.env, 'EXCHANGE', 'amq.topic'),
     routingKey: opt(process.env, 'ROUTING_KEY', '#'),
-    rpcPrefix: opt(process.env, 'RPC_PREFIX', 'miimetiq.writer.rpc.')
+    rpcPrefix: opt(process.env, 'RPC_PREFIX', 'miimetiq.writer.rpc.'),
+    queueName: opt(process.env, 'QUEUE_NAME', '')
 };
 
 var Nexiot = function (parameters) {
 
     var settings = extend({}, Settings, parameters);
 
+    /**
+     * Connects to message broker
+     *
+     * @returns {Promise} - A Promise for successful connection / channel creation.
+     */
     function connect() {
         var self = this;
         // console.log("URL", self.settings.API_URL);
@@ -35,9 +41,12 @@ var Nexiot = function (parameters) {
 
     }
 
+    /**
+     * Closes AMQP connection.
+     */
     function disconnect() {
         var self = this;
-        return self.connection.close();
+        self.connection.close();
     }
 
     /**
@@ -118,11 +127,9 @@ var Nexiot = function (parameters) {
         });
     }
 
-    function get_system_report(device_id) {
+    function get_system_report(device_id, cb) {
         var self = this;
-        self.rpc(device_id, 'get_report', function(msg){
-            console.log(msg.content.toString())
-        })
+        self.rpc(device_id, 'get_report', cb);
     }
 
     var channel = null;
